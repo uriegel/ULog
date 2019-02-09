@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28516.95
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ULog", "ULog\ULog.csproj", "{51A3282E-1A73-4036-8D7F-E45564E0167A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51A3282E-1A73-4036-8D7F-E45564E0167A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A3282E-1A73-4036-8D7F-E45564E0167A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A3282E-1A73-4036-8D7F-E45564E0167A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A3282E-1A73-4036-8D7F-E45564E0167A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F70110A-7510-4A30-80AB-2EF7AD56289F}
+	EndGlobalSection
+EndGlobal
