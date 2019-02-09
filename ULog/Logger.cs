@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace ULog
 {
@@ -13,16 +14,37 @@ namespace ULog
         public Logger(string category)
         {
             this.category = category;
+            ThreadPool.RegisterWaitForSingleObject(TraceControl.Event, (s, b) => TraceToInfoChanged(), null, -1, false);
         }
 
-        public void Fatal(string text) { }
-        public void Error(string text) { }
-        public void Warning(string text) { }
-        public void Info(string text) { }
-        public void Trace(Func<string> getText) { }
-        public void Verbose(Func<string> getText) { }
+        public void Fatal(string text) { Console.WriteLine($"{DateTime.Now} FATAL {category}-{text}"); }
+        public void Error(string text) { Console.WriteLine($"{DateTime.Now} ERROR {category}-{text}"); }
+        public void Warning(string text) { Console.WriteLine($"{DateTime.Now} WARN  {category}-{text}"); }
+        public void Info(string text) { Console.WriteLine($"{DateTime.Now} INFO  {category}-{text}"); }
+        public void Trace(Func<string> getText)
+        {
+            if (tracing)
+                Console.WriteLine($"{DateTime.Now} TRACE {category}-{getText()}");
+        }
+        public void Verbose(Func<string> getText)
+        {
+            if (tracing && verbose)
+                Console.WriteLine($"{DateTime.Now} VERB  {category}-{getText()}");
+        }
+
+        void TraceChanged()
+        {
+            try
+            {
+                var list = TraceControl.GetFilterList();
+                tracing = list ?? null;
+            }
+            catch { }
+        }
 
         string category;
+        bool tracing;
+        bool verbose;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
