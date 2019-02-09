@@ -11,10 +11,11 @@ namespace ULog
         // TODO: Log to Console (FATAL ERROR WARNING INFO)
         // TODO: Control TRACE and VERBOSE
         // TODO: Blocking Collection
-        public Logger(string category)
+        public Logger(string category, TraceControl traceControl)
         {
             this.category = category;
-            ThreadPool.RegisterWaitForSingleObject(TraceControl.Event, (s, b) => TraceToInfoChanged(), null, -1, false);
+            this.traceControl = traceControl;
+            ThreadPool.RegisterWaitForSingleObject(traceControl.Event, (s, b) => TraceChanged(), null, -1, false);
         }
 
         public void Fatal(string text) { Console.WriteLine($"{DateTime.Now} FATAL {category}-{text}"); }
@@ -36,13 +37,14 @@ namespace ULog
         {
             try
             {
-                var list = TraceControl.GetFilterList();
-                tracing = list ?? null;
+                var list = traceControl.GetFilterList();
+                tracing = list != null;
             }
             catch { }
         }
 
-        string category;
+        readonly string category;
+        readonly TraceControl traceControl;
         bool tracing;
         bool verbose;
 
@@ -79,6 +81,7 @@ namespace ULog
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

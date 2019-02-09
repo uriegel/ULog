@@ -8,11 +8,23 @@ using System.Threading.Tasks;
 
 namespace ULog
 {
-    public static class TraceControl
+    public class TraceControl
     {
-        public static EventWaitHandle Event { get => traceChangedEvent; }
+        public EventWaitHandle Event { get => traceChangedEvent; }
 
-        public static string[] GetFilterList()
+        public TraceControl()
+        {
+            try
+            {
+                traceForceFilterFile = Create();
+            }
+            catch { }
+        }
+
+        protected virtual MemoryMappedFile Create()
+            => MemoryMappedFile.CreateOrOpen("ULog.TraceSwitcherChangedFile", size);
+
+        public string[] GetFilterList()
         {
             if (traceForceFilterFile == null)
                 return null;
@@ -26,7 +38,7 @@ namespace ULog
             }
         }
 
-        public static void AddFilter(string item)
+        public void AddFilter(string item)
         {
             if (traceForceFilterFile == null)
                 return;
@@ -42,7 +54,7 @@ namespace ULog
             }
         }
 
-        public static void RemoveFilter(string item)
+        public void RemoveFilter(string item)
         {
             if (traceForceFilterFile == null)
                 return;
@@ -62,23 +74,10 @@ namespace ULog
             }
         }
 
-        static TraceControl()
-        {
-            try
-            {
-                var customSecurity = new MemoryMappedFileSecurity();
-                customSecurity.AddAccessRule(new System.Security.AccessControl.AccessRule<MemoryMappedFileRights>("everyone", 
-                    MemoryMappedFileRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                traceForceFilterFile = MemoryMappedFile.CreateOrOpen("ULog.TraceSwitcherChangedFile", size, MemoryMappedFileAccess.ReadWriteExecute,
-                    MemoryMappedFileOptions.None, CustomSecurity, System.IO.HandleInheritability.Inheritable);
-            }
-            catch { }
-        }
+        protected const int size = 1000;
+        object locker = new object();
+        EventWaitHandle traceChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "ULog.TraceSwitcherChanged");
 
-        const int size = 1000;
-        static object locker = new object();
-        static EventWaitHandle traceChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "ULog.TraceSwitcherChanged");
-
-        static MemoryMappedFile traceForceFilterFile;
+        MemoryMappedFile traceForceFilterFile;
     }
 }

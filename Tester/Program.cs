@@ -7,7 +7,7 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            var logger = new Logger("Main");
+            var logger = new Logger("Main", new TraceControl());
             logger.Info("=====================================");
             logger.Trace(() => "running...");
             logger.Info("=====================================");
