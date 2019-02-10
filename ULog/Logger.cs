@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -11,26 +12,43 @@ namespace ULog
         // TODO: Log to Console (FATAL ERROR WARNING INFO)
         // TODO: Control TRACE and VERBOSE
         // TODO: Blocking Collection
-        public Logger(string category, TraceControl traceControl)
+
+        #region Constructor
+
+        public Logger(LogSettings logSettings, TraceControl traceControl)
         {
-            this.category = category;
+            category = logSettings.Category;
+            traceKindConsole = logSettings.TraceKindConsole;
             this.traceControl = traceControl;
             ThreadPool.RegisterWaitForSingleObject(traceControl.Event, (s, b) => TraceChanged(), null, -1, false);
+            (new Thread(RunLogging)
+            {
+                IsBackground = false
+            }).Start();
         }
 
-        public void Fatal(string text) { Console.WriteLine($"{DateTime.Now} FATAL {category}-{text}"); }
-        public void Error(string text) { Console.WriteLine($"{DateTime.Now} ERROR {category}-{text}"); }
-        public void Warning(string text) { Console.WriteLine($"{DateTime.Now} WARN  {category}-{text}"); }
-        public void Info(string text) { Console.WriteLine($"{DateTime.Now} INFO  {category}-{text}"); }
+        #endregion
+
+        #region Methods
+
+        public void Fatal(string text) { queue.TryAdd(new LogItem(TraceKind.None, $"{DateTime.Now} FATAL {category}-{text}")); }
+
+        public void Error(string text) { queue.TryAdd(new LogItem(TraceKind.None, $"{DateTime.Now} ERROR {category}-{text}")); }
+
+        public void Warning(string text) { queue.TryAdd(new LogItem(TraceKind.None, $"{DateTime.Now} WARN  {category}-{text}")); }
+
+        public void Info(string text) { queue.TryAdd(new LogItem(TraceKind.None, $"{DateTime.Now} INFO  {category}-{text}")); }
+
         public void Trace(Func<string> getText)
         {
             if (traceKind != TraceKind.None)
-                Console.WriteLine($"{DateTime.Now} TRACE {category}-{getText()}");
+                queue.TryAdd(new LogItem(TraceKind.Trace, $"{DateTime.Now} TRACE {category}-{getText()}"));
         }
+
         public void Verbose(Func<string> getText)
         {
             if (traceKind == TraceKind.Verbose)
-                Console.WriteLine($"{DateTime.Now} VERB  {category}-{getText()}");
+                queue.TryAdd(new LogItem(TraceKind.Verbose, $"{DateTime.Now} VERB  {category}-{getText()}"));
         }
 
         void TraceChanged()
@@ -42,10 +60,44 @@ namespace ULog
             catch { }
         }
 
+        void RunLogging()
+        {
+            while (queue.TryTake(out var logItem, -1))
+            {
+                if (logItem.TraceKind == TraceKind.None 
+                    || (traceKindConsole == TraceKind.Trace && (logItem.TraceKind == TraceKind.Trace))
+                    || (traceKindConsole == TraceKind.Verbose && (logItem.TraceKind == TraceKind.Trace || logItem.TraceKind == TraceKind.Verbose)))
+                    Console.WriteLine(logItem.Text);
+            }
+            queue.Dispose();
+        }
+
+        #endregion
+
+        #region Types
+
+        struct LogItem
+        {
+            public LogItem(TraceKind traceKind, string text)
+            {
+                Text = text;
+                TraceKind = traceKind;
+            }
+            public TraceKind TraceKind { get; }
+            public string Text { get; }
+        }
+
+        #endregion
+
+        #region Fields
+
         readonly string category;
+        readonly TraceKind traceKindConsole;
         readonly TraceControl traceControl;
+        readonly BlockingCollection<LogItem> queue = new BlockingCollection<LogItem>();
         TraceKind traceKind;
-        bool verbose;
+
+        #endregion
 
         #region IDisposable Support
 
@@ -58,6 +110,7 @@ namespace ULog
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
+                    queue.CompleteAdding();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

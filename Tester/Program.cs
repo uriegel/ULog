@@ -8,18 +8,33 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            var logger = new Logger("Main", new TraceControl());
-            logger.Info("=====================================");
-            logger.Trace(() => "running...");
-            logger.Info("=====================================");
-
-            while (true)
+            (new Thread(() =>
             {
-                logger.Info("Test");
+                Console.ReadLine();
+                stopEvent.Set();
+            })).Start();
+
+            using (var logger = new Logger(new LogSettings
+            {
+                Category = "Main",
+                TraceKindConsole = TraceKind.Verbose
+            }, new TraceControl()))
+            {
+                logger.Info("=====================================");
                 logger.Trace(() => "running...");
-                logger.Verbose(() => "running and running...");
-                Thread.Sleep(1000);
+                logger.Info("=====================================");
+
+                while (true)
+                {
+                    logger.Info("Test");
+                    logger.Trace(() => "running...");
+                    logger.Verbose(() => "running and running...");
+                    if (stopEvent.WaitOne(1000))
+                        break;
+                }
             }
+
         }
+        static ManualResetEvent stopEvent = new ManualResetEvent(false);
     }
 }
