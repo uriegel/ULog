@@ -9,11 +9,6 @@ namespace ULog
 {
     public class Logger : IDisposable
     {
-        // TODO: Control Windows Event Log (FATAL ERROR WARNING INFO)
-        // TODO: Log to Console (FATAL ERROR WARNING INFO)
-        // TODO: Control TRACE and VERBOSE
-        // TODO: Blocking Collection
-
         #region Constructor
 
         public Logger(LogSettings logSettings, TraceControl traceControl)

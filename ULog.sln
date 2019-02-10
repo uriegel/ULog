@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tester", "Tester\Tester.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ULogWin", "ULogWin\ULogWin.csproj", "{C2383130-9E3C-4099-A158-FB9C1B601A73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraceSwitcher", "TraceSwitcher\TraceSwitcher.csproj", "{5C571ED3-8A5F-4812-A05F-1C82FC53B2E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraceSwitcher", "TraceSwitcher\TraceSwitcher.csproj", "{5C571ED3-8A5F-4812-A05F-1C82FC53B2E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tester", "Tester", "{70F0D2A4-D6BA-4EE8-88EF-1ECFA225FFD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6D3A42BB-6CAA-45A9-909D-CA6DCF692E7D} = {70F0D2A4-D6BA-4EE8-88EF-1ECFA225FFD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F70110A-7510-4A30-80AB-2EF7AD56289F}

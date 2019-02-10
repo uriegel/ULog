@@ -1,8 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Uwe Riegel</Authors>
+    <Company />
+    <Description>Logging System for .NET Standard</Description>
+    <PackageLicenseUrl>https://github.com/uriegel/ULog/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/uriegel/ULog</PackageProjectUrl>
   </PropertyGroup>
 
 </Project>

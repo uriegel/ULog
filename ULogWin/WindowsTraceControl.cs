@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ULogWin
 {
+    // TODO: Windows Event Log (FATAL ERROR WARNING INFO)
     public class WindowsTraceControl : ULog.TraceControl
     {
         protected override MemoryMappedFile Create()
