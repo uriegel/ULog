@@ -8,5 +8,6 @@ namespace ULog
     {
         public TraceKind TraceKindConsole { get; set; }
         public string Category { get; set; }
+        public string LogFile { get; set; }
     }
 }

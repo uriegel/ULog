@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -19,6 +20,12 @@ namespace ULog
         {
             category = logSettings.Category;
             traceKindConsole = logSettings.TraceKindConsole;
+            if (!string.IsNullOrEmpty(logSettings.LogFile))
+            {
+                var fi = new FileInfo(logSettings.LogFile);
+                Directory.CreateDirectory(fi.DirectoryName);
+                logFile = logSettings.LogFile;
+            }
             this.traceControl = traceControl;
             ThreadPool.RegisterWaitForSingleObject(traceControl.Event, (s, b) => TraceChanged(), null, -1, false);
             (new Thread(RunLogging)
@@ -68,6 +75,9 @@ namespace ULog
                     || (traceKindConsole == TraceKind.Trace && (logItem.TraceKind == TraceKind.Trace))
                     || (traceKindConsole == TraceKind.Verbose && (logItem.TraceKind == TraceKind.Trace || logItem.TraceKind == TraceKind.Verbose)))
                     Console.WriteLine(logItem.Text);
+                if (!string.IsNullOrEmpty(logFile))
+                    using (var sw = File.AppendText(logFile))
+                        sw.WriteLine(logItem.Text);
             }
             queue.Dispose();
         }
@@ -95,6 +105,7 @@ namespace ULog
         readonly TraceKind traceKindConsole;
         readonly TraceControl traceControl;
         readonly BlockingCollection<LogItem> queue = new BlockingCollection<LogItem>();
+        readonly string logFile;
         TraceKind traceKind;
 
         #endregion

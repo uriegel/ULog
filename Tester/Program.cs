@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using ULog;
 
@@ -17,6 +18,7 @@ namespace Tester
             using (var logger = new Logger(new LogSettings
             {
                 Category = "Main",
+                LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LogTest", "test.log"),
                 TraceKindConsole = TraceKind.Verbose
             }, new TraceControl()))
             {
