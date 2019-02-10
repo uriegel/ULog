@@ -24,12 +24,12 @@ namespace ULog
         public void Info(string text) { Console.WriteLine($"{DateTime.Now} INFO  {category}-{text}"); }
         public void Trace(Func<string> getText)
         {
-            if (tracing)
+            if (traceKind != TraceKind.None)
                 Console.WriteLine($"{DateTime.Now} TRACE {category}-{getText()}");
         }
         public void Verbose(Func<string> getText)
         {
-            if (tracing && verbose)
+            if (traceKind == TraceKind.Verbose)
                 Console.WriteLine($"{DateTime.Now} VERB  {category}-{getText()}");
         }
 
@@ -37,19 +37,19 @@ namespace ULog
         {
             try
             {
-                var list = traceControl.GetFilterList();
-                tracing = list != null;
+                traceKind = traceControl.GetKind();
             }
             catch { }
         }
 
         readonly string category;
         readonly TraceControl traceControl;
-        bool tracing;
+        TraceKind traceKind;
         bool verbose;
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+
+        bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {

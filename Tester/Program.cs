@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using ULog;
 
 namespace Tester
@@ -12,7 +13,13 @@ namespace Tester
             logger.Trace(() => "running...");
             logger.Info("=====================================");
 
-            Console.WriteLine("Hello World!");
+            while (true)
+            {
+                logger.Info("Test");
+                logger.Trace(() => "running...");
+                logger.Verbose(() => "running and running...");
+                Thread.Sleep(1000);
+            }
         }
     }
 }
