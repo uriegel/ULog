@@ -15,16 +15,18 @@ namespace Tester
                 stopEvent.Set();
             })).Start();
 
+            var logfile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LogTest", "test.log");
             using (var logger = new Logger(new LogSettings
             {
                 Category = "Main",
-                LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LogTest", "test.log"),
+                LogFile = logfile,
                 TraceKindConsole = TraceKind.Verbose
             }, new TraceControl()))
             {
                 logger.Info("=====================================");
                 logger.Trace(() => "running...");
                 logger.Info("=====================================");
+                logger.Info($"Logfile: {logfile}");
 
                 while (true)
                 {

@@ -74,7 +74,9 @@ namespace ULog
 
         protected const int size = 1;
         object locker = new object();
-        EventWaitHandle traceChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "ULog.TraceSwitcherChanged");
+        // Not supported on Linux
+        //EventWaitHandle traceChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "ULog.TraceSwitcherChanged");
+        EventWaitHandle traceChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset);
 
         MemoryMappedFile traceForceFilterFile;
     }
